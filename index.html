@@ -85,6 +85,21 @@
   .history-list .score-good{color:var(--good);font-weight:700;}
   .history-list .score-bad{color:var(--bad);font-weight:700;}
   .empty-state{color:var(--ink-soft);font-size:13.5px;text-align:center;padding:20px 0;}
+  .gr-topics{display:flex;flex-wrap:wrap;width:100%;}
+  .gr-topics button{flex:1 1 auto;}
+  .gr-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:6px 0 10px;}
+  .gr-table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.4;}
+  .gr-table th{text-align:left;background:#e9e1c9;padding:6px 8px;font-size:12px;color:var(--ink);}
+  .gr-table td{padding:7px 8px;border-bottom:1px solid var(--card-line);vertical-align:top;color:var(--ink);}
+  .gr-table .gr-exc{font-style:italic;}
+  .gr-form td:first-child{width:22px;font-weight:700;color:var(--accent);}
+  .gr-en{font-size:11.5px;color:var(--ink-soft);font-weight:400;}
+  .gr-badge{display:inline-block;font-size:10px;font-weight:700;color:#fff;background:var(--accent);border-radius:4px;padding:1px 5px;vertical-align:middle;}
+  .gr-det{border:1px solid var(--card-line);border-radius:9px;padding:8px 10px;margin:8px 0;background:#fffdf7;font-size:14px;}
+  .gr-det summary{cursor:pointer;font-weight:700;font-family:var(--serif);font-size:15px;}
+  .gr-det p{margin:8px 0 4px;}
+  .gr-ul{margin:0 0 6px;padding-left:20px;}
+  .options.gr-long{grid-template-columns:1fr;}
   .mode-switch{display:flex;gap:6px;margin-bottom:12px;}
   .mode-switch button{flex:1;padding:10px 8px;border-radius:10px;border:1.5px solid #3c5f56;background:transparent;color:#e7e2d3;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;}
   .mode-switch button.on{background:var(--gold);border-color:var(--gold);color:#1d1a12;}
@@ -121,6 +136,7 @@
   <div class="mode-switch" id="modeSwitch">
     <button data-mode="lessons" class="on">Lekce</button>
     <button data-mode="fv">Frázová slovesa</button>
+    <button data-mode="gr">Gramatika</button>
   </div>
 
   <div id="lessonChrome">
@@ -558,10 +574,14 @@ function renderZap(){
 }
 
 /* ============ FRÁZOVÁ SLOVESA (mimo lekce) ============ */
+const FV_K10 = [{"v":"get","p":"on","lbl":"get on (a train)","cz":"nastoupit (do vlaku, autobusu)","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"We got on the train in Jihlava.","cz":"Nastoupili jsme do vlaku v Jihlavě.","blank":"on"}]},{"v":"get","p":"off","lbl":"get off (a train)","cz":"vystoupit (z vlaku, autobusu)","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"Get off the bus at the next stop.","cz":"Vystup z autobusu na příští zastávce.","blank":"off"}]},{"v":"get","p":"in","lbl":"get in (a car)","cz":"nastoupit (do auta)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Get in the car, we are late.","cz":"Nastup do auta, máme zpoždění.","blank":"in"}]},{"v":"get","p":"out of","lbl":"get out of (a car)","cz":"vystoupit (z auta)","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"She got out of the car and waved.","cz":"Vystoupila z auta a zamávala.","blank":"out"}]},{"v":"go","p":"out","lbl":"go out","cz":"jít ven (i za zábavou)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"We often go out on Friday evening.","cz":"V pátek večer často chodíme ven.","blank":"out"}]},{"v":"come","p":"in","lbl":"come in (into)","cz":"vejít, vstoupit","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"Come in and sit down.","cz":"Pojď dál a posaď se.","blank":"in"}]},{"v":"put","p":"on","lbl":"put sth on","cz":"obléknout si (např. tričko)","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"Put a T-shirt on, it's cold.","cz":"Obleč si tričko, je zima.","blank":"on"}]},{"v":"take","p":"off","lbl":"take sth off","cz":"svléknout si, sundat","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"Take your shoes off, please.","cz":"Zuj si prosím boty.","blank":"off"}]},{"v":"put","p":"in","lbl":"put sth in","cz":"vložit, dát dovnitř","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Put the milk in, please.","cz":"Dej tam prosím mléko.","blank":"in"}]},{"v":"take","p":"out","lbl":"take sth out","cz":"vyndat, vytáhnout","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"Take the cake out of the oven.","cz":"Vyndej koláč z trouby.","blank":"out"}]},{"v":"turn","p":"on","lbl":"turn on","cz":"zapnout","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"Turn on the light, please.","cz":"Zapni prosím světlo.","blank":"on"}]},{"v":"turn","p":"off","lbl":"turn off","cz":"vypnout","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"Don't forget to turn off the TV.","cz":"Nezapomeň vypnout televizi.","blank":"off"}]},{"v":"turn","p":"up","lbl":"turn up (volume)","cz":"zesílit (zvuk, topení)","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"Can you turn the radio up?","cz":"Můžeš zesílit rádio?","blank":"up"}]},{"v":"turn","p":"down","lbl":"turn down (volume)","cz":"ztlumit, zeslabit","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"Turn the music down, the baby is sleeping.","cz":"Ztlum hudbu, miminko spí.","blank":"down"}]},{"v":"switch","p":"on","lbl":"switch on","cz":"zapnout, rozsvítit","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"Switch on the computer.","cz":"Zapni počítač.","blank":"on"}]},{"v":"switch","p":"off","lbl":"switch off","cz":"vypnout, zhasnout","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Switch off your phones, please.","cz":"Vypněte si prosím telefony.","blank":"off"}]},{"v":"plug","p":"in","lbl":"plug in","cz":"zapojit (do zásuvky)","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"Plug in the kettle.","cz":"Zapoj rychlovarnou konvici.","blank":"in"}]},{"v":"unplug","p":"","lbl":"unplug","cz":"odpojit, vytáhnout ze zásuvky","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[]},{"v":"wrap","p":"up","lbl":"wrap sth up","cz":"zabalit (dárek)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"I wrapped up the present.","cz":"Zabalil jsem dárek.","blank":"up"}]},{"v":"unwrap","p":"","lbl":"unwrap","cz":"rozbalit","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[]},{"v":"pick","p":"up","lbl":"pick sth up","cz":"zvednout; vyzvednout (někoho)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"I'll pick you up at six.","cz":"Vyzvednu tě v šest.","blank":"up"}]},{"v":"wake","p":"up","lbl":"wake sb up","cz":"vzbudit (někoho)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Please wake me up at seven.","cz":"Prosím vzbuď mě v sedm.","blank":"up"}]},{"v":"look","p":"after","lbl":"look after sb","cz":"starat se o (někoho)","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"Who looks after your dog?","cz":"Kdo se stará o tvého psa?","blank":"after"}]},{"v":"look","p":"for","lbl":"look for sb / sth","cz":"hledat (někoho, něco)","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"I'm looking for my keys.","cz":"Hledám své klíče.","blank":"for"}]},{"v":"look","p":"forward to","lbl":"look forward to sth","cz":"těšit se na (něco)","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"I'm looking forward to the holiday.","cz":"Těším se na dovolenou.","blank":"to"}]},{"v":"call","p":"back","lbl":"call back","cz":"zavolat zpět","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"I'll call you back later.","cz":"Zavolám ti později zpátky.","blank":"back"}]},{"v":"find","p":"out","lbl":"find out","cz":"zjistit","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Find out when the train leaves.","cz":"Zjisti, kdy jede vlak.","blank":"out"}]},{"v":"take","p":"off","lbl":"take off (a plane)","cz":"vzlétnout (letadlo)","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"The plane took off on time.","cz":"Letadlo vzlétlo včas.","blank":"off"}]},{"v":"split","p":"up","lbl":"split up (with sb)","cz":"rozejít se (s někým)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"They split up last year.","cz":"Loni se rozešli.","blank":"up"}]},{"v":"break","p":"up","lbl":"break up (with sb)","cz":"rozejít se (s někým)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"She broke up with her boyfriend.","cz":"Rozešla se s přítelem.","blank":"up"}]},{"v":"fall","p":"over","lbl":"fall over","cz":"upadnout, spadnout","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"He fell over on the ice.","cz":"Upadl na ledu.","blank":"over"}]},{"v":"trip","p":"over","lbl":"trip over","cz":"zakopnout (o něco)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"I tripped over the cable.","cz":"Zakopl jsem o kabel.","blank":"over"}]},{"v":"get","p":"on with","lbl":"get on (well, badly) with sb","cz":"vycházet (dobře, špatně) s někým","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"I get on well with my boss.","cz":"S šéfem dobře vycházím.","blank":"on"}]},{"v":"give","p":"up","lbl":"give sth up","cz":"vzdát se, přestat (např. kouřit)","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"He gave up smoking.","cz":"Přestal kouřit.","blank":"up"}]},{"v":"call","p":"off","lbl":"call off (= cancel)","cz":"zrušit (akci)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"The match was called off.","cz":"Zápas byl zrušen.","blank":"off"}]},{"v":"put","p":"off","lbl":"put off (= postpone)","cz":"odložit (na později)","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"We put off the meeting until Friday.","cz":"Odložili jsme schůzku na pátek.","blank":"off"}]},{"v":"let","p":"down","lbl":"let sb down (= disappoint)","cz":"zklamat (někoho)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Don't let me down.","cz":"Nezklam mě.","blank":"down"}]},{"v":"throw","p":"away","lbl":"throw sth away","cz":"vyhodit (do koše)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Throw away the old newspapers.","cz":"Vyhoď staré noviny.","blank":"away"}]},{"v":"wash","p":"up","lbl":"wash up","cz":"umýt nádobí","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"I'll wash up after dinner.","cz":"Po večeři umyju nádobí.","blank":"up"}]},{"v":"cut","p":"off","lbl":"cut sth off","cz":"odříznout; přerušit (dodávku, hovor)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"They cut off the electricity.","cz":"Přerušili dodávku elektřiny.","blank":"off"}]},{"v":"eat","p":"out","lbl":"eat out","cz":"najíst se venku (v restauraci)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"We eat out on Sundays.","cz":"V neděli chodíme jíst do restaurace.","blank":"out"}]},{"v":"eat","p":"up","lbl":"eat sth up","cz":"sníst (všechno)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Eat up your soup.","cz":"Dojez polévku.","blank":"up"}]},{"v":"check","p":"in","lbl":"check in","cz":"ubytovat se; odbavit se","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"We checked in at the hotel at noon.","cz":"V poledne jsme se ubytovali v hotelu.","blank":"in"}]},{"v":"check","p":"out","lbl":"check out","cz":"odhlásit se (z hotelu)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"You must check out by ten.","cz":"Musíte se odhlásit do deseti.","blank":"out"}]},{"v":"try","p":"on","lbl":"try on (clothes)","cz":"zkusit si (oblečení)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Can I try on this jacket?","cz":"Můžu si zkusit tuhle bundu?","blank":"on"}]},{"v":"try","p":"out","lbl":"try out","cz":"vyzkoušet (něco nového)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"I want to try out the new bike.","cz":"Chci vyzkoušet nové kolo.","blank":"out"}]},{"v":"ring","p":"up","lbl":"ring sb up","cz":"zavolat (někomu)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Ring me up tomorrow.","cz":"Zavolej mi zítra.","blank":"up"}]},{"v":"fly","p":"away","lbl":"fly away","cz":"odletět","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"The bird flew away.","cz":"Pták odletěl.","blank":"away"}]},{"v":"carry","p":"out","lbl":"carry out","cz":"provést, uskutečnit","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"We carried out a test.","cz":"Provedli jsme test.","blank":"out"}]},{"v":"run","p":"out of","lbl":"run out of sth","cz":"dojít (něco), vyčerpat","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"We ran out of petrol.","cz":"Došel nám benzín.","blank":"out"}]},{"v":"turn","p":"down","lbl":"turn sth down (= reject)","cz":"odmítnout","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"She turned down the job offer.","cz":"Odmítla nabídku práce.","blank":"down"}]},{"v":"work","p":"out","lbl":"work out","cz":"cvičit; vyřešit, vyjít","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"I work out three times a week.","cz":"Cvičím třikrát týdně.","blank":"out"}]},{"v":"break","p":"down","lbl":"break down","cz":"porouchat se; zhroutit se","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Our car broke down on the motorway.","cz":"Na dálnici se nám porouchalo auto.","blank":"down"}]},{"v":"turn","p":"up","lbl":"turn up (= arrive)","cz":"objevit se, dorazit","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"He turned up an hour late.","cz":"Dorazil o hodinu později.","blank":"up"}]},{"v":"show","p":"up","lbl":"show up","cz":"objevit se, dorazit","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Only five people showed up.","cz":"Přišlo jen pět lidí.","blank":"up"}]},{"v":"write","p":"down","lbl":"write sth down","cz":"zapsat si","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Write down my number.","cz":"Zapiš si moje číslo.","blank":"down"}]},{"v":"note","p":"down","lbl":"note sth down","cz":"poznamenat si","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Note down the address.","cz":"Poznamenej si adresu.","blank":"down"}]},{"v":"fill","p":"in","lbl":"fill in","cz":"vyplnit (formulář)","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"Fill in your name here.","cz":"Sem vyplňte své jméno.","blank":"in"}]},{"v":"fill","p":"out","lbl":"fill out","cz":"vyplnit (formulář)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Please fill out this form.","cz":"Vyplňte prosím tento formulář.","blank":"out"}]},{"v":"stay","p":"in","lbl":"stay in","cz":"zůstat doma","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"Let's stay in tonight.","cz":"Zůstaňme dnes večer doma.","blank":"in"}]},{"v":"get","p":"up","lbl":"get up","cz":"vstát","src":"Kapitola 10 – domácí úkol","inBook":true,"ex":[{"en":"I get up at six.","cz":"Vstávám v šest.","blank":"up"}]},{"v":"get","p":"rid of","lbl":"get rid of sth","cz":"zbavit se (něčeho)","src":"Kapitola 10 – domácí úkol","inBook":false,"ex":[{"en":"I want to get rid of this old sofa.","cz":"Chci se zbavit téhle staré pohovky.","blank":"of"}]}];
 const FV_SET_SIZE = 10;
-const fvLabel = it => `${it.v} ${it.p}`;
+const fvLabel = it => it.lbl || `${it.v} ${it.p}`;
+const FV_ALL = PHRASAL.concat(FV_K10);
+const FV_K10_SETS = (()=>{ const n=Math.max(1,Math.round(FV_K10.length/FV_SET_SIZE)), s=[]; for(let i=0;i<n;i++) s.push(FV_K10.slice(Math.round(i*FV_K10.length/n), Math.round((i+1)*FV_K10.length/n))); return s; })();
+function fvName(key){ if(key==='fv-mix') return 'Mix'; if(key==='fv-k10-mix') return 'Kap. 10 · mix'; if(key.startsWith('fv-k10-')) return 'Kap. 10 · test '+key.slice(7); return 'Test '+key.slice(3); }
 const FV_SETS = (()=>{ const s=[]; for(let i=0;i<PHRASAL.length;i+=FV_SET_SIZE) s.push(PHRASAL.slice(i,i+FV_SET_SIZE)); return s; })();
-const FV_PARTICLES = [...new Set(PHRASAL.flatMap(it=>[it.p, ...it.ex.map(e=>e.blank)]))].filter(p=>!/somebody|^(lost|mad)$/.test(p));
+const FV_PARTICLES = [...new Set(FV_ALL.flatMap(it=>[it.p, ...it.ex.map(e=>e.blank)]))].filter(p=>!/somebody|^(lost|mad)$/.test(p));
 let fvTab = 'tests';
 let fvSession = null;
 
@@ -580,10 +600,15 @@ function renderFv(){
 
 function renderFvList(){
   let html = `<h2 class="section-title">Frázová slovesa – přehled</h2>
-    <p class="section-desc">${PHRASAL.length} vazeb: jádro je z oddílu „Frázová slovesa“ v lekci 27 (s. 192–194), doplněné o frázová slovesa z rámečků Zapamatujte si v ostatních lekcích.</p>
+    <p class="section-desc">${FV_K10.length} vazeb z domácího úkolu (kapitola 10) + ${PHRASAL.length} vazeb z knihy: jádro je z oddílu „Frázová slovesa“ v lekci 27 (s. 192–194), doplněné o frázová slovesa z rámečků Zapamatujte si v ostatních lekcích.</p>
     <div class="zap-tools"><div class="toggle-group" id="czToggle">
       <button data-v="0" class="${zapHideCz?'':'on'}">Čeština viditelná</button>
       <button data-v="1" class="${zapHideCz?'on':''}">Skrýt češtinu</button></div></div>`;
+  html += `<div class="fv-verb">KAPITOLA 10 – DOMÁCÍ ÚKOL</div><ul class="zap-list${zapHideCz?' hide-cz':''}">`;
+  FV_K10.forEach(it => {
+    html += `<li><span class="en">${esc(fvLabel(it))}${it.inBook ? ' <span class="fv-src">· je i v knize</span>' : ''}</span><span class="cz">${esc(it.cz)}</span></li>`;
+  });
+  html += `</ul><div class="fv-verb" style="margin-top:18px;opacity:.7">Z KNIHY</div>`;
   const byVerb = {};
   PHRASAL.forEach(it => { (byVerb[it.v] = byVerb[it.v] || []).push(it); });
   Object.keys(byVerb).sort().forEach(v => {
@@ -601,16 +626,33 @@ function renderFvList(){
 
 async function renderFvSets(){
   renderFvChrome(`
-    <h2 class="section-title">Testy frázových sloves</h2>
+    <h2 class="section-title">Kapitola 10 – domácí úkol</h2>
+    <p class="section-desc">${FV_K10.length} frázových sloves z domácího úkolu (Phrasal Verbs 1), rozdělených do ${FV_K10_SETS.length} testů.</p>
+    <div class="set-grid" id="setGridK10"></div>
+    <button class="secondary" id="mixK10Btn">Náhodný mix ${FV_SET_SIZE} z kapitoly 10</button>
+    <h2 class="section-title" style="margin-top:26px;">Testy frázových sloves z knihy</h2>
     <p class="section-desc">Každý test má ${FV_SET_SIZE} vazeb. Otázky se střídají: význam EN → CZ, CZ → EN a doplnění částice do věty z knihy.</p>
     <div class="set-grid" id="setGrid"></div>
-    <button class="secondary" id="mixBtn">Náhodný mix ${FV_SET_SIZE} ze všech</button>
+    <button class="secondary" id="mixBtn">Náhodný mix ${FV_SET_SIZE} ze všech (kniha + kap. 10)</button>
     <div id="historyBox" style="margin-top:22px;"></div>`);
-  document.getElementById('mixBtn').onclick = () => startFvTest('mix', shuffle(PHRASAL).slice(0, FV_SET_SIZE));
+  document.getElementById('mixBtn').onclick = () => startFvTest('mix', shuffle(FV_ALL).slice(0, FV_SET_SIZE));
+  document.getElementById('mixK10Btn').onclick = () => startFvTest('k10-mix', shuffle(FV_K10).slice(0, FV_SET_SIZE));
   const state = await loadState();
   const th = state.testHistory || {};
   const grid = document.getElementById('setGrid');
   if(!grid) return;
+  const addSetBtn = (g, key, title, set) => {
+    const h = th[key] || [];
+    const best = h.length ? Math.max(...h.map(x=>Math.round(x.score/x.total*100))) : null;
+    const verbs = [...new Set(set.map(it=>it.v))].join(', ');
+    const b = document.createElement('button');
+    b.className = 'set-btn';
+    b.innerHTML = `<b>${title}</b><small>${set.length} vazeb · ${esc(verbs)}</small>${best!==null ? `<span class="best" style="color:${best>=70?'var(--good)':'var(--bad)'}">nejlépe ${best} %</span>` : ''}`;
+    b.onclick = () => startFvTest(key, set);
+    g.appendChild(b);
+  };
+  const gridK10 = document.getElementById('setGridK10');
+  FV_K10_SETS.forEach((set, i) => addSetBtn(gridK10, 'fv-k10-'+(i+1), 'Kap. 10 · test '+(i+1), set));
   FV_SETS.forEach((set, i) => {
     const key = 'fv-' + (i+1);
     const h = th[key] || [];
@@ -628,15 +670,15 @@ async function renderFvSets(){
   if(!all.length){ box.innerHTML = `<p class="section-desc">Zatím žádná historie testů frázových sloves.</p>`; return; }
   box.innerHTML = `<h3 class="sub-title">Historie</h3><ul class="history-list">${all.slice(-8).reverse().map(h=>{
     const pct = Math.round(h.score/h.total*100);
-    const name = h.k==='fv-mix' ? 'Mix' : 'Test '+h.k.slice(3);
+    const name = fvName(h.k);
     return `<li><span>${h.date} · ${name}</span><span class="${pct>=70?'score-good':'score-bad'}">${h.score}/${h.total} (${pct}%)</span></li>`;
   }).join('')}</ul>`;
 }
 
 function pickDistractors(item, n, valueFn){
   const correct = valueFn(item);
-  const same = shuffle(PHRASAL.filter(o => o !== item && o.v === item.v));
-  const rest = shuffle(PHRASAL.filter(o => o !== item && o.v !== item.v));
+  const same = shuffle(FV_ALL.filter(o => o !== item && o.v === item.v));
+  const rest = shuffle(FV_ALL.filter(o => o !== item && o.v !== item.v));
   const out = [];
   for(const o of [...same, ...rest]){
     const v = valueFn(o);
@@ -666,6 +708,7 @@ function buildFvQuestion(item){
 }
 
 function startFvTest(key, set){
+  if(!key.startsWith('fv-')) key = 'fv-' + key;
   fvSession = {key, items: shuffle(set).map(buildFvQuestion), index:0, correct:0, wrong:[], answered:false};
   renderFvQuestion();
 }
@@ -675,7 +718,7 @@ function renderFvQuestion(){
   if(s.index >= s.items.length){ finishFvTest(); return; }
   const q = s.items[s.index];
   mainCard.innerHTML = `
-    <div class="quiz-progress"><span>${s.key==='fv-mix'?'Mix':'Test '+s.key.slice(3)} · otázka ${s.index+1} / ${s.items.length}</span><span>Skóre: ${s.correct}</span></div>
+    <div class="quiz-progress"><span>${fvName(s.key)} · otázka ${s.index+1} / ${s.items.length}</span><span>Skóre: ${s.correct}</span></div>
     <div class="q-kind">${q.label}</div>
     ${q.kind==='gap' ? q.prompt : `<div class="prompt-word" style="font-size:24px;">${q.prompt}</div><div class="prompt-ipa">&nbsp;</div>`}
     <div class="options" id="optsWrap"></div>
@@ -701,7 +744,7 @@ async function finishFvTest(){
   const s = fvSession;
   const pct = Math.round(s.correct/s.items.length*100);
   mainCard.innerHTML = `
-    <h2 class="section-title">Výsledek – ${s.key==='fv-mix'?'mix':'test '+s.key.slice(3)}</h2>
+    <h2 class="section-title">Výsledek – ${fvName(s.key)}</h2>
     <div class="summary-stats">
       <div class="stat"><span class="num">${s.correct}/${s.items.length}</span><span class="lbl">správně</span></div>
       <div class="stat"><span class="num">${pct}%</span><span class="lbl">úspěšnost</span></div>
@@ -719,6 +762,515 @@ async function finishFvTest(){
   if(!s.retry) await appendTestHistory(s.key, {date: new Date().toLocaleDateString('cs-CZ'), score:s.correct, total:s.items.length});
 }
 
+/* ============ GRAMATIKA – DATA ============ */
+const GR_TENSES = [
+ {id:'ps', cz:'Přítomný čas prostý', en:'Present Simple', src:'přehled', grp:'pres',
+  struct:'základní tvar (he/she/it + -s); zápor a otázka s do/does',
+  form:['He works.','He doesn\'t work.','Does he work?'],
+  use:['opakované a zvykové děje','obecné pravdy a stavy'],
+  signal:'always, usually, often, sometimes, seldom, rarely, never, every day',
+  ex:[['She usually goes to work by bus.','Obvykle jezdí do práce autobusem.']]},
+ {id:'pc', cz:'Přítomný čas průběhový', en:'Present Continuous', src:'přehled', grp:'pres',
+  struct:'am / is / are + -ing',
+  form:['He is working.','He isn\'t working.','Is he working?'],
+  use:['děj probíhá právě teď','pevně naplánovaná blízká budoucnost (domluveno, zarezervováno)'],
+  signal:'now, at the moment, this evening, tomorrow, next Friday (plán)',
+  ex:[['Are you eating now?','Jíš teď?'],['She is leaving tomorrow.','Zítra odjíždí.']]},
+ {id:'pas', cz:'Minulý čas prostý', en:'Past Simple', src:'přehled', grp:'past',
+  struct:'2. tvar slovesa (pravidelná -ed); zápor a otázka s did; být = was / were',
+  form:['He worked.','He didn\'t work.','Did he work?'],
+  use:['ukončený děj v minulosti, víme kdy'],
+  signal:'yesterday, last week / month / year, two years ago, in 1967',
+  ex:[['Did you go to the cinema? – Yes, I went to the cinema.','Šel jsi do kina? – Ano, šel jsem do kina.']]},
+ {id:'pac', cz:'Minulý čas průběhový', en:'Past Continuous', src:'přehled', grp:'past',
+  struct:'was / were + -ing',
+  form:['He was working.','He wasn\'t working.','Was he working?'],
+  use:['děj probíhal v určité chvíli v minulosti','probíhající děj přerušený jiným dějem (minulý prostý)'],
+  signal:'when, while, as, all day, the whole morning',
+  ex:[['When I came home, she was making coffee.','Když jsem přišel domů, (zrovna) vařila kávu.'],['When I came home, she made coffee.','Když jsem přišel domů, uvařila kávu. (až potom)']]},
+ {id:'fs', cz:'Budoucí čas (will)', en:'Future Simple', src:'přehled', grp:'fut',
+  struct:'will + základní tvar (zápor won\'t); Shall I / we …?',
+  form:['He will work.','He won\'t work.','Will he work?'],
+  use:['rozhodnutí v okamžiku mluvení','nabídka, slib, prosba (Will you …?)','domněnka a názor (I think, probably, maybe)','Shall I …? = Mám …?'],
+  signal:'I think, probably, perhaps, maybe, tomorrow',
+  ex:[['I\'ll have fish and chips, please.','Dám si rybu s hranolky.'],['Shall I open the window?','Mám otevřít okno?']]},
+ {id:'gt', cz:'Vazba going to', en:'going to', src:'přehled', grp:'fut',
+  struct:'am / is / are going to + základní tvar',
+  form:['He is going to work.','He isn\'t going to work.','Is he going to work?'],
+  use:['plány a úmysly (rozhodnuto předem)','předpověď na základě viditelných důkazů'],
+  signal:'next week, tomorrow; Look! …',
+  ex:[['Look at the sky! It is going to rain.','Podívej na oblohu! Bude pršet.']]},
+ {id:'fc', cz:'Budoucí čas průběhový', en:'Future Continuous', src:'doplněno', grp:'fut',
+  struct:'will be + -ing',
+  form:['He will be working.','He won\'t be working.','Will he be working?'],
+  use:['děj bude probíhat v určité chvíli v budoucnosti'],
+  signal:'this time tomorrow, at 8 o\'clock tomorrow, all day tomorrow',
+  ex:[['This time tomorrow I will be lying on the beach.','Zítra touto dobou budu ležet na pláži.']]},
+ {id:'pp', cz:'Předpřítomný čas prostý', en:'Present Perfect', src:'přehled', grp:'perf',
+  struct:'have / has + 3. tvar slovesa',
+  form:['He has worked.','He hasn\'t worked.','Has he worked?'],
+  use:['děj v minulosti, která není přesně určená','zkušenost: Už jsi někdy …? / Nikdy jsem ne…','Jak dlouho už …? (do češtiny překládáme přítomným časem)'],
+  signal:'recently, lately, ever, never, yet, already, just, since, for, how long',
+  ex:[['Have you ever been to France?','Už jsi někdy byl ve Francii?'],['I have known him for fifteen years.','Znám ho patnáct let.']]},
+ {id:'ppc', cz:'Předpřítomný čas průběhový', en:'Present Perfect Continuous', src:'přehled', grp:'perf',
+  struct:'have / has been + -ing',
+  form:['He has been working.','He hasn\'t been working.','Has he been working?'],
+  use:['děj trvá už delší dobu (i s přestávkami) a stále trvá','zdůrazňujeme, jak dlouho děj trvá'],
+  signal:'how long, since, for, all day',
+  ex:[['It has been raining since five o\'clock.','Prší od pěti hodin.']]},
+ {id:'pastp', cz:'Předminulý čas prostý', en:'Past Perfect', src:'přehled', grp:'perf',
+  struct:'had + 3. tvar slovesa',
+  form:['He had worked.','He hadn\'t worked.','Had he worked?'],
+  use:['děj proběhl dřív než jiný minulý děj'],
+  signal:'when (= předtím než), already, before, by the time',
+  ex:[['When Sarah arrived at the party, Paul had already gone home.','Když Sarah přišla na večírek, Paul už byl pryč (odešel domů).']]},
+ {id:'pastpc', cz:'Předminulý čas průběhový', en:'Past Perfect Continuous', src:'přehled', grp:'perf',
+  struct:'had been + -ing',
+  form:['He had been working.','He hadn\'t been working.','Had he been working?'],
+  use:['děj probíhal delší dobu před jiným minulým dějem'],
+  signal:'for, since, all day, when',
+  ex:[['I was very tired when I got home. I\'d been working hard all day.','Když jsem přišel domů, byl jsem hodně unavený. Celý den jsem tvrdě pracoval.']]},
+ {id:'fp', cz:'Předbudoucí čas prostý', en:'Future Perfect', src:'doplněno', grp:'perf',
+  struct:'will have + 3. tvar slovesa',
+  form:['He will have worked.','He won\'t have worked.','Will he have worked?'],
+  use:['děj bude ukončený do určité chvíle v budoucnosti'],
+  signal:'by Friday, by the time, by next year',
+  ex:[['By Friday I will have finished the report.','Do pátku budu mít zprávu hotovou.']]},
+ {id:'fpc', cz:'Předbudoucí čas průběhový', en:'Future Perfect Continuous', src:'doplněno', grp:'perf',
+  struct:'will have been + -ing',
+  form:['He will have been working.','He won\'t have been working.','Will he have been working?'],
+  use:['jak dlouho bude děj trvat k určité chvíli v budoucnosti'],
+  signal:'by June … for ten years',
+  ex:[['By June I will have been working here for ten years.','V červnu to bude deset let, co tu pracuji.']]},
+ {id:'cond', cz:'Podmiňovací způsob přítomný', en:'Conditional (would)', src:'doplněno', grp:'cond',
+  struct:'would + základní tvar (zkráceně \'d)',
+  form:['He would work.','He wouldn\'t work.','Would he work?'],
+  use:['co bychom udělali (nereálná podmínka v přítomnosti)','zdvořilá nabídka a prosba'],
+  signal:'if I had …, Would you like …?',
+  ex:[['If I had more money, I would buy a new car.','Kdybych měl víc peněz, koupil bych si nové auto.']]},
+ {id:'condp', cz:'Podmiňovací způsob minulý', en:'Conditional Perfect', src:'doplněno', grp:'cond',
+  struct:'would have + 3. tvar slovesa',
+  form:['He would have worked.','He wouldn\'t have worked.','Would he have worked?'],
+  use:['co bychom byli udělali v minulosti (už se nestalo)'],
+  signal:'if I had known …',
+  ex:[['If I had known, I would have come earlier.','Kdybych to byl věděl, byl bych přišel dřív.']]},
+];
+const GR_TENSE_GROUPS = [
+ {id:'pres', name:'Přítomnost', ids:['ps','pc','pp','ppc']},
+ {id:'past', name:'Minulost', ids:['pas','pac','pp','pastp','pastpc']},
+ {id:'fut',  name:'Budoucnost', ids:['fs','gt','fc','fp','fpc','pc']},
+ {id:'cond', name:'Podmiňovací způsob', ids:['cond','condp','fs','pas']},
+];
+/* {odpověď} = mezera; alt = chybné tvary */
+const GR_TENSE_ITEMS = [
+ {t:'ps', v:'go', en:'She usually {goes} to work by bus.', cz:'Obvykle jezdí do práce autobusem.', alt:['is going','went','has gone']},
+ {t:'ps', v:'boil', en:'Water {boils} at 100 degrees Celsius.', cz:'Voda vře při 100 °C.', alt:['is boiling','boiled','has boiled']},
+ {t:'ps', v:'eat', en:'He is a vegetarian, he {doesn\'t eat} meat.', cz:'Je vegetarián, nejí maso.', alt:['didn\'t eat','hasn\'t eaten','wasn\'t eating']},
+ {t:'ps', v:'play', en:'We {play} tennis every Saturday.', cz:'Každou sobotu hrajeme tenis.', alt:['are playing','played','have played']},
+ {t:'pc', v:'sleep', en:'Be quiet, please. The baby {is sleeping}.', cz:'Buď prosím zticha. Miminko spí.', alt:['sleeps','slept','has slept']},
+ {t:'pc', v:'snow', en:'Look! It {is snowing}.', cz:'Podívej! Sněží.', alt:['snows','snowed','was snowing']},
+ {t:'pc', v:'do', en:'What {are you doing} at the moment?', cz:'Co právě děláš?', alt:['do you do','did you do','have you done']},
+ {t:'pc', v:'meet', en:'I {am meeting} Tom tomorrow evening – we have already booked a table.', cz:'Zítra večer se scházím s Tomem – stůl už máme zarezervovaný.', alt:['meet','met','have met']},
+ {t:'pas', v:'visit', en:'I {visited} my grandmother last weekend.', cz:'Minulý víkend jsem navštívil babičku.', alt:['visit','have visited','had visited']},
+ {t:'pas', v:'buy', en:'They {bought} a new car two years ago.', cz:'Před dvěma lety si koupili nové auto.', alt:['have bought','buy','had bought']},
+ {t:'pas', v:'arrive', en:'When {did you arrive} yesterday?', cz:'Kdy jsi včera přijel?', alt:['have you arrived','do you arrive','had you arrived']},
+ {t:'pas', v:'write', en:'Mozart {wrote} more than 600 pieces of music.', cz:'Mozart napsal přes 600 skladeb.', alt:['has written','writes','is writing']},
+ {t:'pac', v:'make', en:'When I came home, she {was making} coffee.', cz:'Když jsem přišel domů, (zrovna) vařila kávu.', alt:['makes','has made','is making']},
+ {t:'pac', v:'work', en:'While I {was working} in the garden, our friends came to see us.', cz:'Zatímco jsem pracoval na zahradě, přišli nás navštívit přátelé.', alt:['work','have worked','am working']},
+ {t:'pac', v:'rain', en:'It {was raining} all day yesterday.', cz:'Včera celý den pršelo.', alt:['rains','is raining','has been raining']},
+ {t:'pac', v:'do', en:'What {were you doing} at eight o\'clock last night?', cz:'Co jsi (zrovna) dělal včera v osm večer?', alt:['do you do','have you done','are you doing']},
+ {t:'fs', v:'close', en:'It\'s cold in here. – OK, I {will close} the window.', cz:'Je tu zima. – Dobře, zavřu okno. (rozhodl jsem se teď)', alt:['closed','have closed','was closing']},
+ {t:'fs', v:'win', en:'I think Sparta {will win} the match tomorrow.', cz:'Myslím, že Sparta zítra vyhraje zápas.', alt:['won','has won','wins']},
+ {t:'fs', v:'tell', en:'Don\'t worry, I {won\'t tell} anyone.', cz:'Neboj, nikomu to neřeknu.', alt:['didn\'t tell','haven\'t told','wasn\'t telling']},
+ {t:'fs', v:'call', en:'{Will you call} me tomorrow, please?', cz:'Zavoláš mi prosím zítra?', alt:['Did you call','Have you called','Were you calling']},
+ {t:'gt', v:'rain', en:'Look at those black clouds! It {is going to rain}.', cz:'Podívej na ty černé mraky! Bude pršet.', alt:['rains','rained','has rained']},
+ {t:'gt', v:'buy', en:'We {are going to buy} a new house next year – we have already saved the money.', cz:'Příští rok si koupíme nový dům – peníze už máme našetřené.', alt:['bought','have bought','were buying']},
+ {t:'gt', v:'have', en:'She {is going to have} a baby in May.', cz:'V květnu bude mít miminko.', alt:['had','has had','had had']},
+ {t:'fc', v:'lie', en:'This time tomorrow I {will be lying} on the beach.', cz:'Zítra touto dobou budu ležet na pláži.', alt:['lay','was lying','have lain']},
+ {t:'fc', v:'have', en:'Don\'t call me at eight – I {will be having} dinner then.', cz:'Nevolej mi v osm – to budu (zrovna) večeřet.', alt:['had','was having','have had']},
+ {t:'fc', v:'fly', en:'At 10 a.m. tomorrow we {will be flying} to London.', cz:'Zítra v 10 dopoledne budeme (zrovna) letět do Londýna.', alt:['flew','have flown','were flying']},
+ {t:'pp', v:'be', en:'{Have you ever been} to France?', cz:'Už jsi někdy byl ve Francii?', alt:['Are you ever','Had you ever been','Will you ever be']},
+ {t:'pp', v:'see', en:'I {have never seen} that film.', cz:'Ten film jsem nikdy neviděl.', alt:['am never seeing','had never seen','never see']},
+ {t:'pp', v:'know', en:'I {have known} Tom for fifteen years.', cz:'Znám Toma patnáct let.', alt:['know','knew','am knowing']},
+ {t:'pp', v:'finish', en:'We {haven\'t finished} yet.', cz:'Ještě jsme neskončili.', alt:['don\'t finish','hadn\'t finished','won\'t finish']},
+ {t:'ppc', v:'rain', en:'It {has been raining} since five o\'clock.', cz:'Prší od pěti hodin.', alt:['rains','is raining','was raining']},
+ {t:'ppc', v:'learn', en:'How long {have you been learning} English?', cz:'Jak dlouho se učíš anglicky?', alt:['are you learning','do you learn','did you learn']},
+ {t:'ppc', v:'wait', en:'I {have been waiting} for you for an hour!', cz:'Čekám na tebe už hodinu!', alt:['wait','am waiting','waited']},
+ {t:'pastp', v:'go', en:'When Sarah arrived at the party, Paul {had already gone} home.', cz:'Když Sarah přišla na večírek, Paul už odešel domů.', alt:['has already gone','already goes','is already going']},
+ {t:'pastp', v:'leave', en:'I realised that I {had left} my keys at home.', cz:'Uvědomil jsem si, že jsem (předtím) nechal klíče doma.', alt:['have left','leave','am leaving']},
+ {t:'pastp', v:'start', en:'The film {had started} before we got to the cinema.', cz:'Film začal dřív, než jsme dorazili do kina.', alt:['has started','starts','is starting']},
+ {t:'pastpc', v:'work', en:'I was very tired when I got home. I {had been working} hard all day.', cz:'Když jsem přišel domů, byl jsem hodně unavený. Celý den jsem tvrdě pracoval.', alt:['have been working','am working','work']},
+ {t:'pastpc', v:'rain', en:'The ground was very wet. It {had been raining}.', cz:'Země byla hodně mokrá. (Předtím) pršelo.', alt:['has been raining','rains','is raining']},
+ {t:'pastpc', v:'play', en:'We {had been playing} tennis for half an hour when it started to rain.', cz:'Hráli jsme tenis asi půl hodiny, když začalo pršet.', alt:['have been playing','are playing','play']},
+ {t:'fp', v:'finish', en:'By Friday I {will have finished} the report.', cz:'Do pátku budu mít zprávu hotovou.', alt:['finish','have finished','finished']},
+ {t:'fp', v:'eat', en:'By the time you arrive, we {will have eaten} everything.', cz:'Než dorazíš, budeme mít všechno snědené.', alt:['eat','have eaten','ate']},
+ {t:'fp', v:'be', en:'Next year they {will have been} married for 25 years.', cz:'Příští rok budou manželé 25 let.', alt:['are','were','had been']},
+ {t:'fpc', v:'work', en:'By June I {will have been working} here for ten years.', cz:'V červnu to bude deset let, co tu pracuji.', alt:['work','am working','had been working']},
+ {t:'fpc', v:'drive', en:'At 6 p.m. she {will have been driving} for eight hours.', cz:'V 18 hodin už bude řídit osm hodin.', alt:['drives','is driving','drove']},
+ {t:'cond', v:'buy', en:'If I had more money, I {would buy} a new car.', cz:'Kdybych měl víc peněz, koupil bych si nové auto.', alt:['will buy','buy','bought']},
+ {t:'cond', v:'like', en:'{Would you like} a cup of tea?', cz:'Dal by sis šálek čaje?', alt:['Do you like','Will you like','Did you like']},
+ {t:'cond', v:'help', en:'I {would help} you, but I don\'t have time.', cz:'Pomohl bych ti, ale nemám čas.', alt:['will help','help','helped']},
+ {t:'condp', v:'come', en:'If I had known, I {would have come} earlier.', cz:'Kdybych to (byl) věděl, byl bych přišel dřív.', alt:['would come','will come','came']},
+ {t:'condp', v:'pass', en:'She {would have passed} the exam if she had studied more.', cz:'Byla by udělala zkoušku, kdyby se víc učila.', alt:['would pass','will pass','passes']},
+];
+
+const GR_CAN = [
+ {verb:'to plan – naplánovat', rows:[
+  ['mohu naplánovat','I can plan',''],
+  ['nemohu naplánovat','I can\'t plan',''],
+  ['jsem schopen naplánovat','I am able to plan',''],
+  ['byl jsem schopen naplánovat','I was able to plan',''],
+  ['budu schopen naplánovat','I will be able to plan',''],
+  ['byl bych schopen naplánovat','I would be able to plan',''],
+  ['uměl jsem naplánovat','I could plan','schopnost v minulosti'],
+  ['mohl bych naplánovat','I could plan','podmiňovací způsob'],
+  ['mohl jsem naplánovat','I could have planned','ale neudělal jsem to'],
+  ['to přece nemohli naplánovat','they can\'t have planned it','moje domněnka do minulosti, nevěřím tomu'],
+  ['nemohli to naplánovat','they couldn\'t have planned it','moje domněnka do minulosti, jsem si na 100 % jist'],
+ ]},
+ {verb:'to discuss – probrat, prodiskutovat', rows:[
+  ['mohu prodiskutovat','I can discuss',''],
+  ['nemohu prodiskutovat','I can\'t discuss',''],
+  ['jsem schopen prodiskutovat','I am able to discuss',''],
+  ['byl jsem schopen prodiskutovat','I was able to discuss',''],
+  ['budeme schopni prodiskutovat','we\'ll be able to discuss',''],
+  ['uměl jsem prodiskutovat','I could discuss','schopnost v minulosti'],
+  ['Mohli bychom prodiskutovat?','Could we discuss?','zdvořilá otázka'],
+  ['mohl jsem prodiskutovat','I could have discussed','ale neudělal jsem to'],
+  ['to přece nemohli prodiskutovat','They can\'t have discussed it.','moje domněnka do minulosti, nevěřím tomu'],
+  ['nemohli to prodiskutovat','They couldn\'t have discussed it.','moje domněnka do minulosti, jsem si na 100 % jist'],
+ ]},
+];
+const GR_CAN_RULES = [
+ ['can / can\'t + zákl. tvar','mohu, umím / nemohu'],
+ ['be able to + zákl. tvar','být schopen – náhrada can v časech, kde can tvar nemá (will be able to, have been able to)'],
+ ['could + zákl. tvar','uměl jsem (minulost) / mohl bych (podmínka, zdvořilá prosba)'],
+ ['could have + 3. tvar','mohl jsem (ale neudělal jsem to)'],
+ ['can\'t have + 3. tvar','to přece nemohli … (nevěřím tomu)'],
+ ['couldn\'t have + 3. tvar','nemohli … (jsem si jistý)'],
+];
+
+const GR_HAVE_FORMS = [
+ ['Přítomný prostý','I have my car washed.','Nechávám si mýt auto.'],
+ ['Přítomný průběhový','I am having my car washed.','Teď si nechávám mýt auto.'],
+ ['Minulý prostý','I had my car washed.','Nechal jsem si umýt auto.'],
+ ['will','I will have my car washed.','Nechám si umýt auto. (rozhodnutí teď)'],
+ ['going to','I am going to have my car washed.','Nechám si umýt auto. (plán)'],
+ ['Předpřítomný','I have had my car washed.','(Už) jsem si nechal umýt auto.'],
+ ['se způsobovým slovesem','I should / could / want to / need to have my car washed.','Měl bych / mohl bych / chci / potřebuji si nechat umýt auto.'],
+];
+const GR_HAVE = [
+ ['Nechávám si často umýt auto.','I often have my car washed.'],
+ ['Necháváš si často mýt svoje auto?','Do you often have your car washed?'],
+ ['Jak často si necháváš mýt auto? Jednou za měsíc?','How often do you have your car washed? Once a month?'],
+ ['Nenechávám si často mýt auto.','I don\'t often have my car washed.'],
+ ['Necháš si umýt svoje auto? (ptám se na plán)','Are you going to have your car washed?'],
+ ['Ano, nechám si umýt svoje auto. (plán)','Yes, I am going to have my car washed.'],
+ ['Včera jsem si nechal umýt auto.','I had my car washed yesterday.'],
+ ['Kdy sis nechal umýt auto?','When did you have your car washed?'],
+ ['Nenechal jsem si včera umýt auto.','I didn\'t have my car washed yesterday.'],
+ ['Zítra si nechám umýt auto, protože je špinavé. (teď jsem se rozhodl)','I will have my car washed tomorrow because it is dirty.'],
+ ['Zítra nemám čas. Nenechám si umýt svoje auto.','I don\'t have time tomorrow. I won\'t have my car washed.'],
+ ['Necháš si zítra umýt auto?','Will you have your car washed tomorrow?'],
+ ['Proč si lidé nechávají mýt auta?','Why do people have their cars washed?'],
+ ['Měl by sis dát umýt auto.','You should have your car washed.'],
+ ['Chtěl bych si nechat umýt auto.','I would like to have my car washed.'],
+ ['Kde bych si mohl nechat dát umýt auto? Spěchám.','Where could I have my car washed? I am in a hurry.'],
+ ['Potřebuješ si nechat umýt auto?','Do you need to have your car washed?'],
+ ['Mohl bych si nechat dát umýt auto.','I could have my car washed.'],
+ ['Musel jsem si nechat dát umýt auto.','I had to have my car washed.'],
+ ['Nechme si umýt auto!','Let\'s have our car washed!'],
+ ['Teď si nechávám mýt auto.','I am having my car washed now.'],
+ ['Chci si nechat dát umýt auto.','I want to have my car washed.'],
+ ['Potřebuji si nechat umýt auto.','I need to have my car washed.'],
+ ['Kdy si nechala tvoje učitelka angličtiny propíchnout uši?','When did your English teacher have her ears pierced?',['When did your English teacher pierce her ears?','When did your English teacher have pierced her ears?','When has your English teacher had her ears pierced?']],
+ ['Nechala si je propíchnout, když jí bylo osmnáct.','She had her ears pierced when she was eighteen.',['She pierced her ears when she was eighteen.','She had pierced her ears when she was eighteen.','She has had her ears pierced when she was eighteen.']],
+ ['Neumím udělat jahodový dort. Nechám si ho upéct.','I am not able to make a strawberry cake. I will have it baked.',['I am not able to make a strawberry cake. I will bake it.','I am not able to make a strawberry cake. I will have baked it.','I am not able to make a strawberry cake. I have it baked.']],
+ ['Byla u kadeřnice. Nechala si ostříhat vlasy.','She was at her hairdresser\'s. She had her hair cut.',['She was at her hairdresser\'s. She cut her hair.','She was at her hairdresser\'s. She had cut her hair.','She was at her hairdresser\'s. She has her hair cut.']],
+ ['Nechali jsme si náš dům postavit jejich firmou.','We had our house built by their company.',['We built our house by their company.','We had built our house by their company.','We have our house built by their company.']],
+];
+
+const GR_PASSIVE_TABLE = [
+ ['Přítomný prostý','Alex cleans her room every day.','The room is cleaned every day.'],
+ ['Přítomný průběhový','Alex is cleaning her room now.','The room is being cleaned now.'],
+ ['Budoucí (will)','Alex will clean the room.','The room will be cleaned.'],
+ ['Minulý prostý','Alex cleaned her room yesterday.','The room was cleaned yesterday.'],
+ ['Minulý průběhový','Alex was cleaning the room when I came.','The room was being cleaned when I came.'],
+ ['Předpřítomný','Alex has cleaned the room.','The room has been cleaned.'],
+ ['Předminulý','The room looked nice. Alex had cleaned it.','The room had been cleaned.'],
+ ['should','You should clean the room.','The room should be cleaned.'],
+ ['could','You could clean the room.','The room could be cleaned.'],
+];
+/* [činný rod, správný trpný, 3 chybné] */
+const GR_PASSIVE_EX = [
+ ['People speak English here.','English is spoken here.',['English is speaking here.','English was spoken here.','English has spoken here.']],
+ ['Alexander Fleming discovered penicillin.','Penicillin was discovered by Alexander Fleming.',['Penicillin is discovered by Alexander Fleming.','Penicillin was discovering by Alexander Fleming.','Penicillin has been discovered by Alexander Fleming.']],
+ ['The police arrested five smugglers at the airport yesterday.','Five smugglers were arrested at the airport yesterday.',['Five smugglers have been arrested at the airport yesterday.','Five smugglers are arrested at the airport yesterday.','Five smugglers were arresting at the airport yesterday.']],
+ ['The doctor told my father to stop smoking.','My father was told to stop smoking.',['My father is told to stop smoking.','My father was telling to stop smoking.','My father had told to stop smoking.']],
+ ['We use chopsticks for eating noodles.','Chopsticks are used for eating noodles.',['Chopsticks are using for eating noodles.','Chopsticks were used for eating noodles.','Chopsticks have used for eating noodles.']],
+ ['They have cut down thousands of trees.','Thousands of trees have been cut down.',['Thousands of trees have cut down.','Thousands of trees were cut down.','Thousands of trees are being cut down.']],
+ ['Thieves have stolen his car five times.','His car has been stolen five times.',['His car has stolen five times.','His car was being stolen five times.','His car is stolen five times.']],
+ ['A tiger killed six people last week.','Six people were killed by a tiger last week.',['Six people have been killed by a tiger last week.','Six people were killing by a tiger last week.','Six people are killed by a tiger last week.']],
+ ['I hope they\'ll invite me to their party.','I hope I\'ll be invited to their party.',['I hope I\'ll invite to their party.','I hope I was invited to their party.','I hope I\'ll be inviting to their party.']],
+ ['They will open the new cinema next week.','The new cinema will be opened next week.',['The new cinema will open by them next week.','The new cinema is opened next week.','The new cinema will opened next week.']],
+ ['A dog bit my sister.','My sister was bitten by a dog.',['My sister was bit by a dog.','My sister has been bitten by a dog.','My sister is bitten by a dog.']],
+ ['People didn\'t use credit cards much 30 years ago.','Credit cards weren\'t used much 30 years ago.',['Credit cards didn\'t use much 30 years ago.','Credit cards haven\'t been used much 30 years ago.','Credit cards weren\'t using much 30 years ago.']],
+ ['Cattle farming is destroying the rainforests.','The rainforests are being destroyed by cattle farming.',['The rainforests are destroyed by cattle farming.','The rainforests are destroying by cattle farming.','The rainforests have being destroyed by cattle farming.']],
+ ['They have already fired 300 people this year.','300 people have already been fired this year.',['300 people have already fired this year.','300 people were already fired this year.','300 people are already being fired this year.']],
+ ['A professional photographer took these photos.','These photos were taken by a professional photographer.',['These photos were took by a professional photographer.','These photos have been taken by a professional photographer.','These photos are taken by a professional photographer.']],
+];
+const GR_MADE = [
+ ['All our furniture is made {of} wood.','z čeho je věc vyrobená – materiál je pořád vidět'],
+ ['Paper is made {from} wood.','materiál se při výrobě změnil, už ho nepoznáš'],
+ ['The house is made {of} bricks.','cihly jsou pořád vidět'],
+ ['Cream is made {from} milk.','mléko se změnilo na smetanu'],
+];
+
+/* ============ GRAMATIKA – UI ============ */
+const GR_TOPICS = [
+ {id:'tenses', name:'Časy'},
+ {id:'can', name:'Sloveso CAN'},
+ {id:'have', name:'Have sth done'},
+ {id:'passive', name:'Trpný rod'},
+];
+let grTopic = 'tenses', grView = 'table', grSession = null, grHideCz = false;
+const grTenseById = Object.fromEntries(GR_TENSES.map(t=>[t.id,t]));
+const grTenseName = id => `${grTenseById[id].cz} (${grTenseById[id].en})`;
+
+function renderGr(){
+  const chips = GR_TOPICS.map(t=>`<button data-grt="${t.id}" class="${grTopic===t.id?'on':''}">${t.name}</button>`).join('');
+  const inner = grView === 'test' ? grTestsHtml() : grTableHtml();
+  mainCard.innerHTML = `
+    <div class="toggle-group gr-topics" id="grTopics">${chips}</div>
+    <nav class="tabs" style="background:#e9e1c9;margin:10px -6px 16px;">
+      <button data-grv="table" class="${grView==='table'?'active':''}" style="color:var(--ink)">Tabulka</button>
+      <button data-grv="test" class="${grView==='test'?'active':''}" style="color:var(--ink)">Test</button>
+    </nav>${inner}`;
+  mainCard.querySelectorAll('[data-grt]').forEach(b=>{ b.onclick = () => { grTopic = b.dataset.grt; renderGr(); }; });
+  mainCard.querySelectorAll('[data-grv]').forEach(b=>{ b.onclick = () => { grView = b.dataset.grv; renderGr(); }; });
+  if(grView === 'test') grWireTests(); else grWireTable();
+}
+
+/* ---------- tabulky ---------- */
+function grTableHtml(){
+  if(grTopic === 'tenses'){
+    let h = `<h2 class="section-title">Přehled časů</h2>
+      <p class="section-desc">Podle přehledu „časy přehled A4“. Časy označené <span class="gr-badge">doplněno</span> v přehledu nebyly – doplnila je AI.</p>
+      <div class="gr-scroll"><table class="gr-table"><thead><tr><th>Čas</th><th>Tvar</th><th>Příklad</th></tr></thead><tbody>`;
+    GR_TENSES.forEach(t=>{
+      h += `<tr><td><b>${esc(t.cz)}</b><br><span class="gr-en">${esc(t.en)}</span>${t.src==='doplněno'?' <span class="gr-badge">doplněno</span>':''}</td><td>${esc(t.struct)}</td><td class="gr-exc">${esc(t.form[0])}</td></tr>`;
+    });
+    h += `</tbody></table></div><h3 class="sub-title" style="margin-top:20px;">Detail (klepni na čas)</h3>`;
+    GR_TENSES.forEach(t=>{
+      h += `<details class="gr-det"><summary>${esc(t.cz)} <span class="gr-en">· ${esc(t.en)}</span>${t.src==='doplněno'?' <span class="gr-badge">doplněno</span>':''}</summary>
+        <table class="gr-table gr-form"><tr><td>+</td><td>${esc(t.form[0])}</td></tr><tr><td>−</td><td>${esc(t.form[1])}</td></tr><tr><td>?</td><td>${esc(t.form[2])}</td></tr></table>
+        <p><b>Kdy:</b></p><ul class="gr-ul">${t.use.map(u=>`<li>${esc(u)}</li>`).join('')}</ul>
+        <p><b>Signální slova:</b> <i>${esc(t.signal)}</i></p>
+        <ul class="zap-list">${t.ex.map(e=>`<li><span class="en">${esc(e[0])}</span><span class="cz">${esc(e[1])}</span></li>`).join('')}</ul>
+      </details>`;
+    });
+    return h;
+  }
+  if(grTopic === 'can'){
+    let h = `<h2 class="section-title">Způsobové sloveso CAN a jeho opisy</h2>
+      <div class="gr-scroll"><table class="gr-table"><thead><tr><th>Tvar</th><th>Význam</th></tr></thead><tbody>
+      ${GR_CAN_RULES.map(r=>`<tr><td><b>${esc(r[0])}</b></td><td>${esc(r[1])}</td></tr>`).join('')}</tbody></table></div>
+      ${grCzToggleHtml()}`;
+    GR_CAN.forEach(b=>{
+      h += `<div class="fv-verb">${esc(b.verb)}</div><ul class="zap-list${grHideCz?' hide-cz':''}">`;
+      b.rows.forEach(r=>{ h += `<li><span class="en">${esc(r[1])}</span><span class="cz">${esc(r[0])}${r[2]?`<span class="fv-ex">(${esc(r[2])})</span>`:''}</span></li>`; });
+      h += `</ul>`;
+    });
+    return h;
+  }
+  if(grTopic === 'have'){
+    let h = `<h2 class="section-title">Have something done – nechat si něco udělat</h2>
+      <p class="section-desc"><b>have + předmět + 3. tvar slovesa.</b> Časuje se jen <i>have</i>, zbytek se nemění.</p>
+      <div class="gr-scroll"><table class="gr-table"><thead><tr><th>Čas</th><th>Anglicky</th><th>Česky</th></tr></thead><tbody>
+      ${GR_HAVE_FORMS.map(r=>`<tr><td><b>${esc(r[0])}</b></td><td>${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join('')}</tbody></table></div>
+      <h3 class="sub-title" style="margin-top:18px;">Věty ze cvičení</h3>${grCzToggleHtml('Skrýt angličtinu')}
+      <ul class="zap-list${grHideCz?' hide-cz':''}">`;
+    GR_HAVE.forEach((r,i)=>{ h += `<li><span class="en" style="font-weight:400">${i+1}. ${esc(r[0])}</span><span class="cz" style="font-style:normal;font-weight:700;color:var(--ink)">${esc(r[1])}</span></li>`; });
+    return h + `</ul>`;
+  }
+  /* passive */
+  let h = `<h2 class="section-title">Trpný rod (Passive)</h2>
+    <p class="section-desc"><b>be (v příslušném čase) + 3. tvar slovesa.</b> Původce děje se uvádí přes <i>by</i>.</p>
+    <div class="gr-scroll"><table class="gr-table"><thead><tr><th>Čas</th><th>Činný rod</th><th>Trpný rod</th></tr></thead><tbody>
+    ${GR_PASSIVE_TABLE.map(r=>`<tr><td><b>${esc(r[0])}</b></td><td>${esc(r[1])}</td><td class="gr-exc">${esc(r[2])}</td></tr>`).join('')}</tbody></table></div>
+    <h3 class="sub-title" style="margin-top:18px;">made of × made from</h3>
+    <ul class="zap-list">${GR_MADE.map(m=>`<li><span class="en">${esc(m[0].replace(/[{}]/g,''))}</span><span class="cz">${esc(m[1])}</span></li>`).join('')}</ul>
+    <h3 class="sub-title" style="margin-top:18px;">Cvičení – převeď do trpného rodu</h3>${grCzToggleHtml('Skrýt řešení')}
+    <ul class="zap-list${grHideCz?' hide-cz':''}">`;
+  GR_PASSIVE_EX.forEach((r,i)=>{ h += `<li><span class="en" style="font-weight:400">${i+1}. ${esc(r[0])}</span><span class="cz" style="font-style:normal;font-weight:700;color:var(--ink)">${esc(r[1])}</span></li>`; });
+  return h + `</ul>`;
+}
+function grCzToggleHtml(hideLabel){
+  return `<div class="zap-tools"><div class="toggle-group" id="grCzToggle">
+    <button data-v="0" class="${grHideCz?'':'on'}">Vše viditelné</button>
+    <button data-v="1" class="${grHideCz?'on':''}">${hideLabel||'Skrýt češtinu'}</button></div></div>`;
+}
+function grWireTable(){
+  mainCard.querySelectorAll('#grCzToggle button').forEach(b=>{ b.onclick = () => { grHideCz = b.dataset.v === '1'; renderGr(); }; });
+  mainCard.querySelectorAll('.zap-list .cz').forEach(c=>{ c.onclick = () => { if(grHideCz) c.classList.toggle('shown'); }; });
+}
+
+/* ---------- generování otázek ---------- */
+const grFill = (en, s) => en.replace(/\{[^}]*\}/, s);
+function grTenseQuestion(it){
+  const ans = it.en.match(/\{([^}]*)\}/)[1];
+  const kind = ['gap','gap','name','cz2en'][Math.floor(Math.random()*4)];
+  const explain = `${grTenseName(it.t)}: ${grFill(it.en, ans)}`;
+  if(kind === 'gap'){
+    const s = esc(it.en).replace(/\{[^}]*\}/, '<span class="gap">&nbsp;</span>');
+    return {label:'Doplň správný tvar', gap:true, prompt:`<div class="gap-sentence">${s} <span style="font-size:15px;color:var(--ink-soft)">(${esc(it.v)})</span></div><div class="prompt-ipa" style="font-family:var(--sans);font-style:italic">${esc(it.cz)}</div>`, options:shuffle([ans, ...it.alt]), correct:ans, explain};
+  }
+  if(kind === 'name'){
+    const correct = grTenseName(it.t);
+    const others = shuffle(GR_TENSES.filter(t=>t.id!==it.t)).slice(0,3).map(t=>grTenseName(t.id));
+    return {label:'Který je to čas?', gap:true, prompt:`<div class="gap-sentence">${esc(it.en).replace(/\{([^}]*)\}/,'<u><b>$1</b></u>')}</div>`, options:shuffle([correct, ...others]), correct, explain};
+  }
+  const correct = grFill(it.en, ans);
+  return {label:'Jak se to řekne anglicky?', gap:true, prompt:`<div class="gap-sentence">${esc(it.cz)}</div>`, options:shuffle([correct, ...it.alt.map(a=>grFill(it.en,a))]), correct, explain, long:true};
+}
+function grCanPool(){ return GR_CAN.flatMap(b=>b.rows.map(r=>({cz:r[0], en:r[1], note:r[2], verb:b.verb, rows:b.rows}))); }
+function grCanQuestion(it){
+  const note = it.note ? ` <span style="font-size:14px;color:var(--ink-soft)">(${esc(it.note)})</span>` : '';
+  if(Math.random() < 0.65){
+    const others = shuffle(it.rows.map(r=>r[1]).filter(x=>x!==it.en)).filter((x,i,a)=>a.indexOf(x)===i).slice(0,3);
+    return {label:'Jak se to řekne anglicky?', gap:true, prompt:`<div class="gap-sentence">${esc(it.cz)}${note}</div>`, options:shuffle([it.en, ...others]), correct:it.en, explain:`${it.cz} = ${it.en}`};
+  }
+  const same = it.rows.filter(r=>r[1]===it.en).map(r=>r[0]);
+  const others = shuffle(it.rows.filter(r=>r[1]!==it.en).map(r=>r[0])).slice(0,3);
+  const correct = same.length > 1 ? same.join(' / ') : it.cz;
+  return {label:'Co to znamená?', gap:true, prompt:`<div class="gap-sentence">${esc(it.en)}</div>`, options:shuffle([correct, ...others]), correct, explain:`${it.en} = ${correct}`};
+}
+function grSimilar(target, pool, n){
+  const tok = s => new Set(s.toLowerCase().replace(/[^a-z' ]/g,' ').split(/\s+/).filter(Boolean));
+  const a = tok(target);
+  return pool.filter(p=>p!==target).map(p=>{ const b=tok(p); let i=0; b.forEach(x=>{ if(a.has(x)) i++; }); return [p, i/(a.size+b.size-i) + Math.random()*0.05]; })
+    .sort((x,y)=>y[1]-x[1]).slice(0,n).map(x=>x[0]);
+}
+function grHaveQuestion(r){
+  const pool = GR_HAVE.filter(x=>!x[2]).map(x=>x[1]);
+  const wrong = r[2] ? r[2] : grSimilar(r[1], pool, 3);
+  return {label:'Jak se to řekne anglicky?', gap:true, prompt:`<div class="gap-sentence">${esc(r[0])}</div>`, options:shuffle([r[1], ...wrong]), correct:r[1], explain:`${r[0]} = ${r[1]}`, long:true};
+}
+function grPassiveQuestion(r){
+  if(r.made){
+    const s = esc(r[0]).replace(/\{[^}]*\}/, '<span class="gap">&nbsp;</span>');
+    const ans = r[0].match(/\{([^}]*)\}/)[1];
+    return {label:'Doplň of / from', gap:true, prompt:`<div class="gap-sentence">${s}</div>`, options:['of','from','by','with'], correct:ans, explain:`${r[0].replace(/[{}]/g,'')} – ${r[1]}`};
+  }
+  return {label:'Převeď do trpného rodu', gap:true, prompt:`<div class="gap-sentence">${esc(r[0])}</div>`, options:shuffle([r[1], ...r[2]]), correct:r[1], explain:r[1], long:true};
+}
+
+/* ---------- definice testů ---------- */
+function grTests(){
+  if(grTopic === 'tenses'){
+    const pick = ids => GR_TENSE_ITEMS.filter(i=>ids.includes(i.t));
+    return [
+      ...GR_TENSE_GROUPS.map(g=>({key:'gr-tenses-'+g.id, title:g.name, sub:g.ids.map(id=>grTenseById[id].en).filter((x,i,a)=>a.indexOf(x)===i).join(', '), build:()=>shuffle(pick(g.ids)).slice(0,12).map(grTenseQuestion)})),
+      {key:'gr-tenses-mix', title:'Mix všech časů', sub:'15 otázek ze všech časů', build:()=>shuffle(GR_TENSE_ITEMS).slice(0,15).map(grTenseQuestion)},
+    ];
+  }
+  if(grTopic === 'can'){
+    return [
+      ...GR_CAN.map((b,i)=>({key:'gr-can-'+(i+1), title:b.verb.split(' – ')[0], sub:`${b.rows.length} tvarů · ${b.verb.split(' – ')[1]}`, build:()=>shuffle(grCanPool().filter(x=>x.verb===b.verb)).map(grCanQuestion)})),
+      {key:'gr-can-mix', title:'Mix CAN', sub:'12 otázek z obou sloves', build:()=>shuffle(grCanPool()).slice(0,12).map(grCanQuestion)},
+    ];
+  }
+  if(grTopic === 'have'){
+    return [
+      {key:'gr-have-1', title:'Věty 1–14', sub:'14 vět ze cvičení', build:()=>shuffle(GR_HAVE.slice(0,14)).map(grHaveQuestion)},
+      {key:'gr-have-2', title:'Věty 15–28', sub:'14 vět ze cvičení', build:()=>shuffle(GR_HAVE.slice(14)).map(grHaveQuestion)},
+      {key:'gr-have-mix', title:'Mix', sub:'12 náhodných vět', build:()=>shuffle(GR_HAVE).slice(0,12).map(grHaveQuestion)},
+    ];
+  }
+  const made = GR_MADE.map(m=>Object.assign([...m],{made:true}));
+  return [
+    {key:'gr-passive-1', title:'Cvičení 1–15', sub:'převod do trpného rodu', build:()=>shuffle(GR_PASSIVE_EX).map(grPassiveQuestion)},
+    {key:'gr-passive-mix', title:'Mix + made of/from', sub:'10 vět + 2× of/from', build:()=>shuffle([...shuffle(GR_PASSIVE_EX).slice(0,10), ...shuffle(made).slice(0,2)]).map(grPassiveQuestion)},
+  ];
+}
+function grTestsHtml(){
+  return `<h2 class="section-title">Testy – ${esc(GR_TOPICS.find(t=>t.id===grTopic).name)}</h2>
+    <p class="section-desc">${grTopic==='tenses'?'Otázky se střídají: doplnění tvaru, určení času a překlad z češtiny.':'Vyber správnou možnost.'}</p>
+    <div class="set-grid" id="grGrid"></div><div id="grHistory" style="margin-top:22px;"></div>`;
+}
+async function grWireTests(){
+  const tests = grTests();
+  const grid = document.getElementById('grGrid');
+  const state = await loadState(); const th = state.testHistory || {};
+  if(!document.getElementById('grGrid')) return;
+  tests.forEach(t=>{
+    const h = th[t.key] || [];
+    const best = h.length ? Math.max(...h.map(x=>Math.round(x.score/x.total*100))) : null;
+    const b = document.createElement('button'); b.className='set-btn';
+    b.innerHTML = `<b>${esc(t.title)}</b><small>${esc(t.sub)}</small>${best!==null?`<span class="best" style="color:${best>=70?'var(--good)':'var(--bad)'}">nejlépe ${best} %</span>`:''}`;
+    b.onclick = () => grStart(t.key, t.title, t.build());
+    grid.appendChild(b);
+  });
+  const box = document.getElementById('grHistory');
+  if(!_userDocRef){ box.innerHTML = `<p class="section-desc">Historie testů se v tomto zobrazení neukládá.</p>`; return; }
+  const keys = tests.map(t=>t.key);
+  const all = keys.flatMap(k=>(th[k]||[]).map(x=>({...x, title:tests.find(t=>t.key===k).title})));
+  if(!all.length){ box.innerHTML = `<p class="section-desc">Zatím žádná historie testů.</p>`; return; }
+  box.innerHTML = `<h3 class="sub-title">Historie</h3><ul class="history-list">${all.slice(-8).reverse().map(h=>{
+    const pct = Math.round(h.score/h.total*100);
+    return `<li><span>${h.date} · ${esc(h.title)}</span><span class="${pct>=70?'score-good':'score-bad'}">${h.score}/${h.total} (${pct}%)</span></li>`;
+  }).join('')}</ul>`;
+}
+
+/* ---------- průběh testu ---------- */
+function grStart(key, title, items, retry){
+  grSession = {key, title, items, index:0, correct:0, wrong:[], answered:false, retry:!!retry};
+  grRenderQ();
+}
+function grRenderQ(){
+  const s = grSession;
+  if(s.index >= s.items.length){ grFinish(); return; }
+  const q = s.items[s.index];
+  mainCard.innerHTML = `
+    <div class="quiz-progress"><span>${esc(s.title)} · otázka ${s.index+1} / ${s.items.length}</span><span>Skóre: ${s.correct}</span></div>
+    <div class="q-kind">${q.label}</div>${q.prompt}
+    <div class="options${q.long?' gr-long':''}" id="optsWrap"></div>
+    <div class="feedback-row"><span class="feedback-text" id="fbText"></span><button class="primary" id="nextBtn" disabled>Další</button></div>`;
+  const wrap = document.getElementById('optsWrap');
+  q.options.forEach(val=>{
+    const b = document.createElement('button'); b.className='opt-btn'; b.textContent = val;
+    b.onclick = () => {
+      if(s.answered) return; s.answered = true;
+      const ok = val === q.correct;
+      wrap.querySelectorAll('.opt-btn').forEach(x=>{ x.disabled=true; if(x.textContent===q.correct) x.classList.add('correct'); else if(x.textContent===val) x.classList.add('wrong'); });
+      const fb = document.getElementById('fbText');
+      if(ok){ s.correct++; fb.textContent = 'Správně! ' + q.explain; fb.className='feedback-text correct'; }
+      else { s.wrong.push(q); fb.textContent = 'Špatně – ' + q.explain; fb.className='feedback-text wrong'; }
+      const nb = document.getElementById('nextBtn'); nb.disabled=false;
+      nb.onclick = () => { s.index++; s.answered=false; grRenderQ(); };
+    };
+    wrap.appendChild(b);
+  });
+}
+async function grFinish(){
+  const s = grSession;
+  const pct = Math.round(s.correct/s.items.length*100);
+  mainCard.innerHTML = `
+    <h2 class="section-title">Výsledek – ${esc(s.title)}</h2>
+    <div class="summary-stats">
+      <div class="stat"><span class="num">${s.correct}/${s.items.length}</span><span class="lbl">správně</span></div>
+      <div class="stat"><span class="num">${pct}%</span><span class="lbl">úspěšnost</span></div>
+    </div>
+    ${s.wrong.length ? `<p class="section-desc">K zopakování:</p><ul class="missed-list">${s.wrong.map(w=>`<li><span class="en">${esc(w.explain)}</span></li>`).join('')}</ul>` : `<p class="section-desc">Bez chyby.</p>`}
+    <div class="setup-row">
+      ${s.wrong.length ? `<button class="primary" id="retryBtn">Zkusit znovu chybné</button>` : ''}
+      <button class="secondary" id="backBtn">Zpět na testy</button>
+    </div>`;
+  if(s.wrong.length) document.getElementById('retryBtn').onclick = () => grStart(s.key, s.title, shuffle(s.wrong).map(q=>({...q, options:shuffle(q.options)})), true);
+  document.getElementById('backBtn').onclick = renderGr;
+  if(!s.retry) await appendTestHistory(s.key, {date:new Date().toLocaleDateString('cs-CZ'), score:s.correct, total:s.items.length});
+}
+
 /* ============ MODE SWITCH ============ */
 let appMode = 'lessons';
 document.querySelectorAll('#modeSwitch button').forEach(b=>{
@@ -734,6 +1286,7 @@ document.querySelectorAll('#modeSwitch button').forEach(b=>{
 /* ============ MAIN RENDER ============ */
 function render(){
   if(appMode === 'fv'){ renderFv(); return; }
+  if(appMode === 'gr'){ renderGr(); return; }
   if(activeTab === 'vocab') renderQuizSetup('vocab');
   else if(activeTab === 'zap') renderZap();
   else if(activeTab === 'phrases') renderQuizSetup('phrases');
